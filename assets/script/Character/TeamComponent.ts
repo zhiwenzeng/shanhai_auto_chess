@@ -1,7 +1,6 @@
 import { _decorator, Component, Node } from 'cc';
 import { AComponent } from '../AComponent';
 import { EFaction } from '../Common/Enums';
-import { MachineBattle } from '../Machine/MachineBattle';
 
 const { ccclass, property } = _decorator;
 

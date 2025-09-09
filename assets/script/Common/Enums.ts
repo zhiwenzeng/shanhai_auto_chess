@@ -2,10 +2,6 @@ import { Enum } from "cc";
 
 export enum ECollider {
     Default = 1 << 0,
-    Obstacle = 1 << 1,
-    Ball = 1 << 2,
-    Column = 1 << 3,
-    Character = 1 << 4,
 }
 Enum(ECollider);
 
