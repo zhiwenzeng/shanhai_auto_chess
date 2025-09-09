@@ -1,0 +1,40 @@
+{
+  "__version__": "1.0.6",
+  "general": {
+    "designResolution": {
+      "width": 1334,
+      "height": 750,
+      "fitHeight": false
+    }
+  },
+  "physics": {
+    "collisionGroups": [
+      {
+        "index": 1,
+        "name": "Obstacle"
+      },
+      {
+        "index": 2,
+        "name": "Ball"
+      },
+      {
+        "index": 3,
+        "name": "Column"
+      },
+      {
+        "index": 4,
+        "name": "Character"
+      }
+    ],
+    "collisionMatrix": {
+      "0": 15,
+      "1": 7,
+      "2": 79,
+      "3": 5,
+      "4": 32,
+      "5": 16,
+      "6": 4
+    }
+  },
+  "custom_joint_texture_layouts": []
+}
