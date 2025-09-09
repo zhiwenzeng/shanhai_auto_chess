@@ -11,6 +11,87 @@
 import ByteBuf from '../luban/ByteBuf'
 
  
+export enum EAbilityAction {
+    /**
+     * 修改攻防数值（可正可负）
+     */
+    ModifyStats = 1,
+    /**
+     * 直接造成伤害
+     */
+    DealDamage = 2,
+    /**
+     * 治疗
+     */
+    Heal = 3,
+    /**
+     * 赋予护甲、复活、减益等状态
+     */
+    GiveStatus = 4,
+    /**
+     * 装备一个持久性道具
+     */
+    GiveEquipment = 5,
+    /**
+     * 召唤
+     */
+    Summon = 6,
+    /**
+     * 直接获得金币
+     */
+    GainGold = 7,
+    /**
+     * 立即刷新商店
+     */
+    RollShop = 8,
+    /**
+     * 增加商店格子（临时/永久）
+     */
+    AddShopSlot = 9,
+    /**
+     * 复制另一个角色的攻防
+     */
+    CopyStats = 10,
+    /**
+     * 复制别人的技能
+     */
+    CopyAbility = 11,
+    /**
+     * 交换攻击/生命值
+     */
+    SwapStats = 12,
+    /**
+     * 远程定点攻击，不会遭反击
+     */
+    Snipe = 13,
+    /**
+     * 调整队伍站位
+     */
+    Push = 14,
+    /**
+     * 调整队伍站位
+     */
+    Pull = 15,
+    /**
+     * 调整队伍站位
+     */
+    Reorder = 16,
+    /**
+     * 移除目标身上的状态
+     */
+    Dispel = 17,
+    /**
+     * 禁止目标技能触发
+     */
+    Silence = 18,
+    /**
+     * 放大某个技能的触发次数或效果
+     */
+    MultiplyTrigger = 19,
+}
+
+ 
+ 
 export enum EAbilityTrigger {
     /**
      * 购买该动物时触发
@@ -130,87 +211,6 @@ export enum EEffectDuration {
      * 直到被触发一次为止
      */
     UntilTrigger = 6,
-}
-
- 
- 
-export enum EEffectType {
-    /**
-     * 修改攻防数值（可正可负）
-     */
-    ModifyStats = 1,
-    /**
-     * 直接造成伤害
-     */
-    DealDamage = 2,
-    /**
-     * 治疗
-     */
-    Heal = 3,
-    /**
-     * 赋予护甲、复活、减益等状态
-     */
-    GiveStatus = 4,
-    /**
-     * 装备一个持久性道具
-     */
-    GiveEquipment = 5,
-    /**
-     * 召唤
-     */
-    Summon = 6,
-    /**
-     * 直接获得金币
-     */
-    GainGold = 7,
-    /**
-     * 立即刷新商店
-     */
-    RollShop = 8,
-    /**
-     * 增加商店格子（临时/永久）
-     */
-    AddShopSlot = 9,
-    /**
-     * 复制另一个角色的攻防
-     */
-    CopyStats = 10,
-    /**
-     * 复制别人的技能
-     */
-    CopyAbility = 11,
-    /**
-     * 交换攻击/生命值
-     */
-    SwapStats = 12,
-    /**
-     * 远程定点攻击，不会遭反击
-     */
-    Snipe = 13,
-    /**
-     * 调整队伍站位
-     */
-    Push = 14,
-    /**
-     * 调整队伍站位
-     */
-    Pull = 15,
-    /**
-     * 调整队伍站位
-     */
-    Reorder = 16,
-    /**
-     * 移除目标身上的状态
-     */
-    Dispel = 17,
-    /**
-     * 禁止目标技能触发
-     */
-    Silence = 18,
-    /**
-     * 放大某个技能的触发次数或效果
-     */
-    MultiplyTrigger = 19,
 }
 
  
@@ -409,7 +409,7 @@ export class AbilityCfg {
         this.trigger = _buf_.readInt()
         this.perBattleCap = _buf_.readInt()
         this.chance = _buf_.readFloat()
-        this.effectType = _buf_.readInt()
+        this.action = _buf_.readInt()
         this.conditions = _buf_.readString()
         this.targeting = _buf_.readString()
         this.params = _buf_.readString()
@@ -432,9 +432,9 @@ export class AbilityCfg {
      */
     readonly chance: number
     /**
-     * 效果类型
+     * 技能动作
      */
-    readonly effectType: EEffectType
+    readonly action: EAbilityAction
     /**
      * json条件
      */
@@ -476,6 +476,8 @@ export class AnimalCfg {
         this.abilityId = _buf_.readInt()
         this.sellRefund = _buf_.readInt()
         this.rarity = _buf_.readInt()
+        { let n = Math.min(_buf_.readSize(), _buf_.size); this.tags = []; for(let i = 0 ; i < n ; i++) { let _e0; _e0 = _buf_.readString(); this.tags.push(_e0);}}
+        this.token = _buf_.readString()
     }
 
     /**
@@ -514,8 +516,18 @@ export class AnimalCfg {
      * 稀有度
      */
     readonly rarity: ERarity
+    /**
+     * 标签
+     */
+    readonly tags: string[]
+    /**
+     * 别名
+     */
+    readonly token: string
 
     resolve(tables:Tables) {
+        
+        
         
         
         
@@ -588,7 +600,7 @@ export class EquipmentCfg {
 
 
 
-export class FootCfg {
+export class FoodCfg {
 
     constructor(_buf_: ByteBuf) {
         this.id = _buf_.readInt()
@@ -887,24 +899,24 @@ export class ShopTable {
 
 
 
-export class FootTable {
-    private _dataMap: Map<number, FootCfg>
-    private _dataList: FootCfg[]
+export class FoodTable {
+    private _dataMap: Map<number, FoodCfg>
+    private _dataList: FoodCfg[]
     constructor(_buf_: ByteBuf) {
-        this._dataMap = new Map<number, FootCfg>()
+        this._dataMap = new Map<number, FoodCfg>()
         this._dataList = []
         for(let n = _buf_.readInt(); n > 0; n--) {
-            let _v: FootCfg
-            _v = new FootCfg(_buf_)
+            let _v: FoodCfg
+            _v = new FoodCfg(_buf_)
             this._dataList.push(_v)
             this._dataMap.set(_v.id, _v)
         }
     }
 
-    getDataMap(): Map<number, FootCfg> { return this._dataMap; }
-    getDataList(): FootCfg[] { return this._dataList; }
+    getDataMap(): Map<number, FoodCfg> { return this._dataMap; }
+    getDataList(): FoodCfg[] { return this._dataList; }
 
-    get(key: number): FootCfg | undefined {
+    get(key: number): FoodCfg | undefined {
         return this._dataMap.get(key); 
     }
 
@@ -962,8 +974,8 @@ export class Tables {
     get AbilityTable(): AbilityTable  { return this._AbilityTable;}
     private _ShopTable: ShopTable
     get ShopTable(): ShopTable  { return this._ShopTable;}
-    private _FootTable: FootTable
-    get FootTable(): FootTable  { return this._FootTable;}
+    private _FoodTable: FoodTable
+    get FoodTable(): FoodTable  { return this._FoodTable;}
     private _EquipmentTable: EquipmentTable
     get EquipmentTable(): EquipmentTable  { return this._EquipmentTable;}
 
@@ -972,7 +984,7 @@ export class Tables {
         names.push('animaltable');
         names.push('abilitytable');
         names.push('shoptable');
-        names.push('foottable');
+        names.push('foodtable');
         names.push('equipmenttable');
         return names;
     }
@@ -981,13 +993,13 @@ export class Tables {
         this._AnimalTable = new AnimalTable(loader('animaltable'))
         this._AbilityTable = new AbilityTable(loader('abilitytable'))
         this._ShopTable = new ShopTable(loader('shoptable'))
-        this._FootTable = new FootTable(loader('foottable'))
+        this._FoodTable = new FoodTable(loader('foodtable'))
         this._EquipmentTable = new EquipmentTable(loader('equipmenttable'))
 
         this._AnimalTable.resolve(this)
         this._AbilityTable.resolve(this)
         this._ShopTable.resolve(this)
-        this._FootTable.resolve(this)
+        this._FoodTable.resolve(this)
         this._EquipmentTable.resolve(this)
     }
 }
