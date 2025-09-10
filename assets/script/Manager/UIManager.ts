@@ -2,12 +2,12 @@ import { _decorator, Canvas, Component, error, instantiate, Node, Prefab, UITran
 import { ASingleton } from '../ASingleton';
 import { EEventType, EUILayer, EUIWindow } from '../Common/Enums';
 import { Const, IUIConfig } from '../Common/Define';
-import { UILoadingWindow } from '../UI/UILoadingWindow';
 import { UIWindow } from '../UI/UIWindow';
 import { ResourceManager } from './ResourceManager';
 import { EventManager } from './EventManager';
 import { SuperCanvas } from '../SuperCanvas';
 import { UILayer } from '../UI/UILayer';
+
 const { ccclass, property } = _decorator;
 
 @ccclass('UIManager')

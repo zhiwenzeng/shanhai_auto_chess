@@ -1,9 +1,10 @@
 import { _decorator, CCString, Component, Label, Node, ProgressBar, tween, Tween } from 'cc';
-import { UIWindow } from './UIWindow';
-import { EventManager } from '../Manager/EventManager';
-import { EEventType } from '../Common/Enums';
-import { TimerManager } from '../Manager/TimerManager';
-import { TFunction } from '../Common/Define';
+import { TFunction } from '../../Common/Define';
+import { EEventType } from '../../Common/Enums';
+import { EventManager } from '../../Manager/EventManager';
+import { TimerManager } from '../../Manager/TimerManager';
+import { UIWindow } from '../UIWindow';
+
 const { ccclass, property } = _decorator;
 
 @ccclass('UILoadingWindow')

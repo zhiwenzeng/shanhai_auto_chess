@@ -97,11 +97,13 @@ export class AudioManager extends ASingleton {
     setMusicEnabled(enabled: boolean) {
         this._musicOn = enabled;
         this._musicSource.volume = enabled ? this._musicVolume : 0;
+        this.saveSettings();
     }
 
     // 设置音效开关
     setEffectEnabled(enabled: boolean) {
         this._effectOn = enabled;
+        this.saveSettings();
     }
 
     // 渐变音量
@@ -109,6 +111,19 @@ export class AudioManager extends ASingleton {
         tween(this._musicSource)
             .to(duration, { volume: target })
             .start();
+    }
+
+    // 设置音乐音量（0~1）
+    setMusicVolume(v: number) {
+        this._musicVolume = Math.min(1, Math.max(0, v));
+        if (this._musicOn) this._musicSource.volume = this._musicVolume;
+        this.saveSettings();
+    }
+
+    // 设置音效音量（0~1）
+    setEffectVolume(v: number) {
+        this._effectVolume = Math.min(1, Math.max(0, v));
+        this.saveSettings();
     }
     
     // 保存设置

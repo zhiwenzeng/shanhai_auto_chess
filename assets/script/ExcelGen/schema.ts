@@ -464,86 +464,6 @@ export class AbilityCfg {
 
 
 
-export class AnimalCfg {
-
-    constructor(_buf_: ByteBuf) {
-        this.animalId = _buf_.readInt()
-        this.packId = _buf_.readInt()
-        this.displayName = _buf_.readString()
-        this.description = _buf_.readString()
-        this.baseAtk = _buf_.readInt()
-        this.baseHp = _buf_.readInt()
-        this.abilityId = _buf_.readInt()
-        this.sellRefund = _buf_.readInt()
-        this.rarity = _buf_.readInt()
-        { let n = Math.min(_buf_.readSize(), _buf_.size); this.tags = []; for(let i = 0 ; i < n ; i++) { let _e0; _e0 = _buf_.readString(); this.tags.push(_e0);}}
-        this.token = _buf_.readString()
-    }
-
-    /**
-     * 主键
-     */
-    readonly animalId: number
-    /**
-     * 卡池id
-     */
-    readonly packId: number
-    /**
-     * 展示名
-     */
-    readonly displayName: string
-    /**
-     * 描述
-     */
-    readonly description: string
-    /**
-     * 基础攻
-     */
-    readonly baseAtk: number
-    /**
-     * 基础血
-     */
-    readonly baseHp: number
-    /**
-     * 技能
-     */
-    readonly abilityId: number
-    /**
-     * 卖出价格
-     */
-    readonly sellRefund: number
-    /**
-     * 稀有度
-     */
-    readonly rarity: ERarity
-    /**
-     * 标签
-     */
-    readonly tags: string[]
-    /**
-     * 别名
-     */
-    readonly token: string
-
-    resolve(tables:Tables) {
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-    }
-}
-
-
-
-
-
 export class EquipmentCfg {
 
     constructor(_buf_: ByteBuf) {
@@ -730,6 +650,86 @@ export class ShopCfg {
 
 
 
+export class UnitCfg {
+
+    constructor(_buf_: ByteBuf) {
+        this.animalId = _buf_.readInt()
+        this.packId = _buf_.readInt()
+        this.displayName = _buf_.readString()
+        this.description = _buf_.readString()
+        this.baseAtk = _buf_.readInt()
+        this.baseHp = _buf_.readInt()
+        this.abilityId = _buf_.readInt()
+        this.sellRefund = _buf_.readInt()
+        this.rarity = _buf_.readInt()
+        { let n = Math.min(_buf_.readSize(), _buf_.size); this.tags = []; for(let i = 0 ; i < n ; i++) { let _e0; _e0 = _buf_.readString(); this.tags.push(_e0);}}
+        this.token = _buf_.readString()
+    }
+
+    /**
+     * 主键
+     */
+    readonly animalId: number
+    /**
+     * 卡池id
+     */
+    readonly packId: number
+    /**
+     * 展示名
+     */
+    readonly displayName: string
+    /**
+     * 描述
+     */
+    readonly description: string
+    /**
+     * 基础攻
+     */
+    readonly baseAtk: number
+    /**
+     * 基础血
+     */
+    readonly baseHp: number
+    /**
+     * 技能
+     */
+    readonly abilityId: number
+    /**
+     * 卖出价格
+     */
+    readonly sellRefund: number
+    /**
+     * 稀有度
+     */
+    readonly rarity: ERarity
+    /**
+     * 标签
+     */
+    readonly tags: string[]
+    /**
+     * 别名
+     */
+    readonly token: string
+
+    resolve(tables:Tables) {
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+    }
+}
+
+
+
+
+
 export class vec2 {
 
     constructor(_buf_: ByteBuf) {
@@ -800,24 +800,24 @@ export class vec4 {
 
 
 
-export class AnimalTable {
-    private _dataMap: Map<number, AnimalCfg>
-    private _dataList: AnimalCfg[]
+export class UnitTable {
+    private _dataMap: Map<number, UnitCfg>
+    private _dataList: UnitCfg[]
     constructor(_buf_: ByteBuf) {
-        this._dataMap = new Map<number, AnimalCfg>()
+        this._dataMap = new Map<number, UnitCfg>()
         this._dataList = []
         for(let n = _buf_.readInt(); n > 0; n--) {
-            let _v: AnimalCfg
-            _v = new AnimalCfg(_buf_)
+            let _v: UnitCfg
+            _v = new UnitCfg(_buf_)
             this._dataList.push(_v)
             this._dataMap.set(_v.animalId, _v)
         }
     }
 
-    getDataMap(): Map<number, AnimalCfg> { return this._dataMap; }
-    getDataList(): AnimalCfg[] { return this._dataList; }
+    getDataMap(): Map<number, UnitCfg> { return this._dataMap; }
+    getDataList(): UnitCfg[] { return this._dataList; }
 
-    get(key: number): AnimalCfg | undefined {
+    get(key: number): UnitCfg | undefined {
         return this._dataMap.get(key); 
     }
 
@@ -968,8 +968,8 @@ export class EquipmentTable {
 type ByteBufLoader = (file: string) => ByteBuf
 
 export class Tables {
-    private _AnimalTable: AnimalTable
-    get AnimalTable(): AnimalTable  { return this._AnimalTable;}
+    private _UnitTable: UnitTable
+    get UnitTable(): UnitTable  { return this._UnitTable;}
     private _AbilityTable: AbilityTable
     get AbilityTable(): AbilityTable  { return this._AbilityTable;}
     private _ShopTable: ShopTable
@@ -981,7 +981,7 @@ export class Tables {
 
     static getTableNames(): string[] {
         let names: string[] = [];
-        names.push('animaltable');
+        names.push('unittable');
         names.push('abilitytable');
         names.push('shoptable');
         names.push('foodtable');
@@ -990,13 +990,13 @@ export class Tables {
     }
 
     constructor(loader: ByteBufLoader) {
-        this._AnimalTable = new AnimalTable(loader('animaltable'))
+        this._UnitTable = new UnitTable(loader('unittable'))
         this._AbilityTable = new AbilityTable(loader('abilitytable'))
         this._ShopTable = new ShopTable(loader('shoptable'))
         this._FoodTable = new FoodTable(loader('foodtable'))
         this._EquipmentTable = new EquipmentTable(loader('equipmenttable'))
 
-        this._AnimalTable.resolve(this)
+        this._UnitTable.resolve(this)
         this._AbilityTable.resolve(this)
         this._ShopTable.resolve(this)
         this._FoodTable.resolve(this)

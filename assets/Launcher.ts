@@ -2,7 +2,8 @@ import { _decorator } from 'cc';
 import { AFramework } from './script/AFramework';
 import { AComponent } from './script/AComponent';
 import { ResourceManager } from './script/Manager/ResourceManager';
-import { EEventType,  } from './script/Common/Enums';
+import { EEventType,  EUIWindow } from './script/Common/Enums';
+import { UIManager } from './script/Manager/UIManager';
 import { EventManager } from './script/Manager/EventManager';
 import { SuperCanvas } from './script/SuperCanvas';
 import { ModelManager } from './script/Manager/ModelManager';
@@ -24,5 +25,7 @@ export class Launcher extends AComponent {
         ]);
         EventManager.Instance.emit(EEventType.SetLoadingProgress, 1);
         EventManager.Instance.emit(EEventType.HideLoading);
+        // 进入Home
+        UIManager.Instance.show(EUIWindow.Home);
     }
 }
