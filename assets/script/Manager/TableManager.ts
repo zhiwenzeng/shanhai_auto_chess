@@ -1,4 +1,4 @@
-import { _decorator } from "cc";
+import { _decorator, BufferAsset, log, resources } from "cc";
 import { ASingleton } from "../ASingleton";
 import { ResourceManager } from "./ResourceManager";
 import { Tables } from "../ExcelGen/schema";
@@ -8,6 +8,9 @@ const { ccclass, property } = _decorator;
 
 @ccclass("TableManager")
 export class TableManager extends ASingleton {
+    public static tables: Tables = null;
+    private static dataMap: Map<string, Uint8Array> = new Map();
+    public static fileNames: string[] = [];
     
     public static get Instance(): TableManager {
         return this.getInstance(TableManager);
@@ -19,72 +22,34 @@ export class TableManager extends ASingleton {
         
     }
 
-    /**
-     * 加载所有表数据（resources/excel_gen 下）
-     */
-    public async loadAll(): Promise<void> {
-        // 预先将所有需要的 .bytes 载入为 ByteBuf
-        const names = Tables.getTableNames();
-        const bufMap = new Map<string, ByteBuf>();
-        for (const name of names) {
-            const bytes = await this._loadBytesFromResources(name);
-            bufMap.set(name, new ByteBuf(bytes));
-        }
-        // 构建 Tables，传入同步 loader
-        this._tables = new Tables((file: string) => {
-            const buf = bufMap.get(file);
-            if (!buf) throw new Error(`找不到表数据: ${file}`);
-            return buf;
-        });
+    public loadConfigName(): void
+    {
+        TableManager.fileNames = Tables.getTableNames()
     }
 
-    /** 获取 Tables 实例（需先调用 loadAll） */
-    public get tables(): Tables {
-        if (!this._tables) {
-            throw new Error("Tables 尚未加载，请先调用 TableManager.loadAll()");
-        }
-        return this._tables;
-    }
-
-    /**
-     * 从 resources/excel_gen 载入指定名字的二进制数据。
-     * 会尝试无扩展名与 .bytes 两种路径。
-     */
-    private async _loadBytesFromResources(name: string): Promise<Uint8Array> {
-        const base = `excel_gen/${name}`;
-        // 先尝试无扩展名，再尝试 .bytes
-        const candidates = [base, `${base}.bytes`];
-        let asset: any = null;
-        let lastErr: any = null;
-        for (const path of candidates) {
-            try {
-                asset = await ResourceManager.Instance.loadAsync<any>(path);
-                if (asset) {
-                    const bytes = this._extractBytes(asset);
-                    if (bytes) return bytes;
-                }
-            } catch (err) {
-                lastErr = err;
-                continue;
+    public async loadAll()
+    {
+        this.loadConfigName();
+        for (let fileName of TableManager.fileNames)
+        {
+            let path = `excel_gen/${fileName}`;
+            let data = await ResourceManager.Instance.loadAsync<BufferAsset>(path);
+            if (data) {
+                let buffer = data.buffer();
+                let bin = new Uint8Array(buffer.slice(0, buffer.byteLength));
+                TableManager.dataMap.set(path, bin);
+            } else {
+                console.error("静态配置加载失败" + path);
             }
         }
-        throw new Error(`加载表数据失败: ${name} (${lastErr ?? '资源不存在'})`);
+        TableManager.tables = new Tables(this.getFileData);
+        console.log("静态配置加载完成");
     }
-
-    /**
-     * 尝试从 Cocos 资源 Asset 对象提取 Uint8Array
-     */
-    private _extractBytes(asset: any): Uint8Array | null {
-        // 常见导入：_nativeAsset 可能是 ArrayBuffer 或 Uint8Array
-        const nat = asset && (asset._nativeAsset ?? asset.nativeAsset ?? asset.data);
-        if (nat instanceof ArrayBuffer) return new Uint8Array(nat);
-        if (nat instanceof Uint8Array) return nat;
-        // 某些版本 TextAsset.text 为字符串，这里退化为 UTF-8 编码（不推荐，但作为兜底）
-        const text = asset && (asset.text as string);
-        if (typeof text === 'string') {
-            try {
-                return new TextEncoder().encode(text);
-            } catch {}
+    private getFileData(fileName: string): ByteBuf
+    {
+        let path = `excel_gen/${fileName}`;
+        if (TableManager.dataMap.has(path)) {
+            return new ByteBuf(TableManager.dataMap.get(path));
         }
         return null;
     }

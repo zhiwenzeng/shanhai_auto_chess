@@ -23,6 +23,7 @@ export class UIManager extends ASingleton {
 
     private _layers: Map<EUILayer, UILayer> = new Map();
     private _windows: Map<EUIWindow, UIWindow> = new Map();
+    private _loadingHided: Set<EUIWindow> = new Set();
 
     protected onInitialize(): void {
         Object.keys(EUILayer).forEach(layerKey => {
@@ -79,6 +80,10 @@ export class UIManager extends ASingleton {
             layerNode.addChild(uiWindow);
             this._windows.set(type, uiWindow);
             this._windows.get(type).open();
+            if (this._loadingHided.has(type)) {
+                this._loadingHided.delete(type);
+                this.hide(EUIWindow.Loading);
+            }
         }).catch(err => {
             error(err);
         });
@@ -90,6 +95,7 @@ export class UIManager extends ASingleton {
             return;
         }
         if (!this._windows.has(type)) {
+            this._loadingHided.add(type);
             return;
         }
         this._windows.get(type).hide();

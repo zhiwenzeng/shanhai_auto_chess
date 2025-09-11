@@ -11,6 +11,7 @@ dotnet $LUBAN_DLL \
     --conf $CONF_ROOT/luban.conf \
     -x outputCodeDir=$WORKSPACE/assets/script/ExcelGen \
     -x outputDataDir=$WORKSPACE/assets/resources/excel_gen \
+    -x bin.fileExt=bin \
     -x pathValidator.rootDir=$WORKSPACE \
     -x l10n.textProviderFile=$WORKSPACE/excels/datas/l10n/texts.json
 
