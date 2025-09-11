@@ -2,8 +2,9 @@ import { _decorator } from 'cc';
 import { UIPanel } from '../UIPanel';
 import { UIMatchDeckPanel } from './UIMatchDeckPanel';
 import { UIFriendPanel } from './UIFriendPanel';
+import { UIButton } from '../Common/UIButton';
 
-const { ccclass } = _decorator;
+const { ccclass, property } = _decorator;
 
 /**
  * 二级面板：游玩模式选择
@@ -13,6 +14,17 @@ const { ccclass } = _decorator;
  */
 @ccclass('UIPlayModePanel')
 export class UIPlayModePanel extends UIPanel {
+
+    @property(UIButton) btnMatch: UIButton = null;
+    @property(UIButton) btnFriend: UIButton = null;
+    @property(UIButton) btnBack: UIButton = null;
+
+    protected onShow(): void {
+        if (this.btnMatch) this.btnMatch.onClick = this.onClickMatch.bind(this);
+        if (this.btnFriend) this.btnFriend.onClick = this.onClickFriend.bind(this);
+        if (this.btnBack) this.btnBack.onClick = this.onClickBack.bind(this);
+    }
+
     public onClickMatch() {
         this.stack?.showByType(UIMatchDeckPanel);
     }

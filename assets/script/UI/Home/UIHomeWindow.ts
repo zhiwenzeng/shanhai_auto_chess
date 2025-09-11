@@ -3,7 +3,6 @@ import { UIWindow } from '../UIWindow';
 import { UIStackPanel } from '../UIPanelStack/UIStackPanel';
 import { UIPlayModePanel } from './UIPlayModePanel';
 import { UIMatchDeckPanel } from './UIMatchDeckPanel';
-import { UICustomDeckPanel } from './UICustomDeckPanel';
 import { UIFriendPanel } from './UIFriendPanel';
 import { UIJoinPanel } from './UIJoinPanel';
 import { UICreatePanel } from './UICreatePanel';
@@ -27,22 +26,21 @@ const { ccclass, property } = _decorator;
 export class UIHomeWindow extends UIWindow {
     // 一级主页按钮面板
     @property(UIHomePanel) homePanel: UIHomePanel = null;
-    @property(UIStackPanel) stackPanel: UIStackPanel = null;
     @property(UIPlayModePanel) playModePanel: UIPlayModePanel = null;
     @property(UIMatchDeckPanel) matchDeckPanel: UIMatchDeckPanel = null;
-    @property(UICustomDeckPanel) customDeckPanel: UICustomDeckPanel = null;
     @property(UIFriendPanel) friendPanel: UIFriendPanel = null;
     @property(UIJoinPanel) joinPanel: UIJoinPanel = null;
     @property(UICreatePanel) createPanel: UICreatePanel = null;
     @property(UICreateDeckPanel) createDeckPanel: UICreateDeckPanel = null;
     @property(UIGalleryPanel) galleryPanel: UIGalleryPanel = null;
 
+    stackPanel: UIStackPanel = null;
+
     protected onOpen(): void {
         this.stackPanel.registerPanels(
             this.homePanel,
             this.playModePanel,
             this.matchDeckPanel,
-            this.customDeckPanel,
             this.friendPanel,
             this.joinPanel,
             this.createPanel,

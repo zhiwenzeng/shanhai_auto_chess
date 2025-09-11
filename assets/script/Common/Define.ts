@@ -34,10 +34,10 @@ export namespace Const {
     // export const FlyingEffect: string = "prefabs/Effects/Fly";
     // export const HitEffect: string = "prefabs/Effects/Air";
     export const UIConfigs: { [key: number]: IUIConfig } = {
-        [EUIWindow.Loading]   : { layer: EUILayer.Loading, path: "ui/UILoadingWindow" },
-        [EUIWindow.Home]      : { layer: EUILayer.Home,    path: "ui/UIHomeWindow" },
-        [EUIWindow.BattleHUD] : { layer: EUILayer.BattleHUD,  path: "ui/UIBattleHUDWindow" },
-        [EUIWindow.Setting]   : { layer: EUILayer.Setting, path: "ui/UISettingWindow" },
+        [EUIWindow.Loading]   : { layer: EUILayer.Loading, path: "ui/UILoading" },
+        [EUIWindow.Home]      : { layer: EUILayer.Home,    path: "ui/UIHome" },
+        [EUIWindow.BattleHUD] : { layer: EUILayer.BattleHUD,  path: "ui/UIBattleHUD" },
+        [EUIWindow.Setting]   : { layer: EUILayer.Setting, path: "ui/UISetting" },
     };
 
     // 基础游戏配置
@@ -47,6 +47,8 @@ export namespace Const {
         RefreshShopCost: 1,
         // 生命
         Life: 10,
+        // 胜利条件
+        ConditionWinCount: 10,
         // 槽位配置
         ShopAnimalSlots: 2,
         ShopFoodSlots: 2,

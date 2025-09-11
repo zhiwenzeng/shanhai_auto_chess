@@ -16,12 +16,12 @@ const { ccclass, property } = _decorator;
  */
 export class UIHomePanel extends UIPanel {
     @property(UIButton) btnPlay: UIButton = null;
-    @property(UIButton) btnCardPack: UIButton = null;
+    @property(UIButton) btnGallery: UIButton = null;
     @property(UIButton) btnSetting: UIButton = null;
 
     protected onShow(): void {
         if (this.btnPlay) this.btnPlay.onClick = this.onClickPlay.bind(this);
-        if (this.btnCardPack) this.btnCardPack.onClick = this.onClickCardPack.bind(this);
+        if (this.btnGallery) this.btnGallery.onClick = this.onClickGallery.bind(this);
         if (this.btnSetting) this.btnSetting.onClick = this.onClickSetting.bind(this);
     }
 
@@ -29,7 +29,7 @@ export class UIHomePanel extends UIPanel {
         this.stack?.showByType(UIPlayModePanel);
     }
 
-    private onClickCardPack() {
+    private onClickGallery() {
         const gallery = this.stack?.getByType(UIGalleryPanel) as UIGalleryPanel;
         gallery?.openReadOnly(1, '图鉴 - 卡包');
         this.stack?.showByType(UIGalleryPanel);

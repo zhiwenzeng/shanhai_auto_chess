@@ -4,14 +4,15 @@ import { UIManager } from '../../Manager/UIManager';
 import { EUIWindow } from '../../Common/Enums';
 import { GameModel } from '../../Model/GameModel';
 import { ModelManager } from '../../Manager/ModelManager';
+import { Const } from '../../Common/Define';
 const { ccclass, property } = _decorator;
 
 @ccclass('UIBattleHUDWindow')
 export class UIBattleHUDWindow extends UIWindow {
-    @property(Label) goldLabel: Label = null;
-    @property(Label) lifeLabel: Label = null;
-    @property(Label) roundLabel: Label = null;
-    @property(Label) winLabel: Label = null;
+    @property(Label) gold: Label = null;
+    @property(Label) life: Label = null;
+    @property(Label) round: Label = null;
+    @property(Label) winCount: Label = null;
 
     private _model: GameModel;
 
@@ -25,11 +26,11 @@ export class UIBattleHUDWindow extends UIWindow {
         const goldText = `金币: ${10}`; // 占位
         const lifeText = `生命: ${this._model?.life ?? 0}`;
         const roundText = `回合: ${this._model?.turn ?? 1}`;
-        const winText = `胜利: ${this._model?.winCount ?? 0}`;
-        if (this.goldLabel) this.goldLabel.string = goldText;
-        if (this.lifeLabel) this.lifeLabel.string = lifeText;
-        if (this.roundLabel) this.roundLabel.string = roundText;
-        if (this.winLabel) this.winLabel.string = winText;
+        const winText = `胜利: ${this._model?.winCount ?? 0}/${Const.Rule.ConditionWinCount}`;
+        if (this.gold) this.gold.string = goldText;
+        if (this.life) this.life.string = lifeText;
+        if (this.round) this.round.string = roundText;
+        if (this.winCount) this.winCount.string = winText;
     }
 
     public onClickRefreshShop() {
@@ -41,7 +42,7 @@ export class UIBattleHUDWindow extends UIWindow {
     }
 
     public onClickOpenGallery() {
-        UIManager.Instance.show(EUIWindow.Gallery);
+
     }
 
     public onClickSetting() {

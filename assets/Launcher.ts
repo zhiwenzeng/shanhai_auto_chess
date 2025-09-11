@@ -7,6 +7,7 @@ import { UIManager } from './script/Manager/UIManager';
 import { EventManager } from './script/Manager/EventManager';
 import { SuperCanvas } from './script/SuperCanvas';
 import { ModelManager } from './script/Manager/ModelManager';
+import { TableManager } from './script/Manager/TableManager';
 
 const { ccclass, property } = _decorator;
 
@@ -23,6 +24,7 @@ export class Launcher extends AComponent {
         await ResourceManager.Instance.preload([
             
         ]);
+        await TableManager.Instance.loadAll();
         EventManager.Instance.emit(EEventType.SetLoadingProgress, 1);
         EventManager.Instance.emit(EEventType.HideLoading);
         // 进入Home

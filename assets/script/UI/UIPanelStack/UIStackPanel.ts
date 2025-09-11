@@ -12,7 +12,7 @@ const { ccclass, property } = _decorator;
  * - back() 时隐藏当前面板并返回上一面板；若无历史，则仅清空当前。
  */
 @ccclass('UIStackPanel')
-export class UIStackPanel extends AComponent implements IPanelStack {
+export class UIStackPanel implements IPanelStack {
     @property([UIPanel]) panels: UIPanel[] = [];
 
     private _stack: UIPanel[] = [];
